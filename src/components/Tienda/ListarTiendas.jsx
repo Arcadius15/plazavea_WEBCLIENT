@@ -13,27 +13,27 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import TiendaService from '../../services/service/Tienda.service';
-import Navegador from '../../utils/Navegador';
-import { Button } from '@mui/material';
+import { Button} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 
 
 const ListarTiendas = () => {
   const[tiendas,setTiendas] = useState([])
-
+  let navigate = useNavigate()
   useEffect(() => {
     const get = async () => {
       await TiendaService.getTiendas().then(
         response => {
           setTiendas(response.data)
         },
-        error=>{
-          Navegador("home")
+        ()=>{
+          navigate("/home")
         }
       )
     }
     get()
-  }, [])
+  }, [navigate])
 
   return (
     <TableContainer component={Paper}>
@@ -58,10 +58,7 @@ const ListarTiendas = () => {
 const RowCollapse = (props) => {
   const { row } = props;
   const [open, setOpen] = useState(false);
-  let navigate = useNavigate()
-  const irURL=(id)=>{
-    navigate(`/tienda/${id}`)
-  }
+  let navigate = useNavigate();
   return (
       <>
         <TableRow sx={{ '& > *': { borderBottom: 'unset',background:'#7C9880' } }}>
@@ -106,7 +103,7 @@ const RowCollapse = (props) => {
                           <TableCell align="right">{row.horarioC}</TableCell>
                           <TableCell align="center">
                             <Button variant="contained" color="success" 
-                              onClick={()=>irURL(row.idTienda)}>
+                              onClick={()=>navigate('/tienda/'+row.idTienda)}>
                               Success
                             </Button>
                           </TableCell>

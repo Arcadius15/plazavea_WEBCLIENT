@@ -10,6 +10,13 @@ import { Button } from 'react-bootstrap';
 
 const RegistrarTienda = () => {
   const [show, setShow] = useState(false)
+
+  const mostrarToast=()=>{
+    setShow(true)
+  }
+  const ocultarToast=()=>{
+    setShow(false)
+  }
   return (
     <>
       <div className='container-fluid shadow-lg' style={{ margin: '10px' }}>
@@ -19,7 +26,7 @@ const RegistrarTienda = () => {
             {
               nombre: '', direccion: '',
               lat: 0, lng: 0, numeroTelefonico: '',
-              horarioA: '00:00:00', horarioC: '00:00:00'
+              horarioA: '00:00', horarioC: '00:00'
             }
           }
           validationSchema={TiendaValidacion}
@@ -30,15 +37,16 @@ const RegistrarTienda = () => {
             const registrar = async () => {
               await TiendaService.postTienda(values).then(res => {
                 if (res.status === 201) {
-                  setShow(true)
+                  mostrarToast()
                 } else {
                   alert("Error" + res.status + ": Error al registrar")
                 }
               }, error => {
                 console.log(error)
-                alert("Error al Registrar")
+                
               })
-              setTimeout(() => { setSubmitting(false); setShow(false); resetForm(); }, 3000)
+              setSubmitting(false);
+              resetForm();
             }
             registrar()
           }}
@@ -87,6 +95,8 @@ const RegistrarTienda = () => {
               <Form.Group controlId='formMapa'>
                 <Form.Label>Mapa:</Form.Label>
                 <MapForm />
+                {values.lat===0||values.lng===0 ?
+                  (<div className={style.error_message}>{"Ingrese Coordenada"}</div>) : null}
               </Form.Group>
 
               <Button style={{ margin: "15px" }}
@@ -96,10 +106,13 @@ const RegistrarTienda = () => {
             </Form>
           )}
         </Formik>
-        <ToastMessage showed={show} />
+        {/* <Button color="success" onClick={mostrarToast}>Muestra toast</Button> */}
+        
+        {/* <ToastMessage showed={show} /> */}
 
 
       </div>
+      {show?<ToastMessage ocultar={ocultarToast}/>:null}
     </>
   )
 }

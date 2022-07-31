@@ -1,17 +1,11 @@
-import {useCallback, useEffect, useNavigate} from 'react'
+import { useNavigate } from "react-router-dom";
 
-const Navegador = (link) => {
-    const navigate = useNavigate()
+const useCustomNav = () => {
+    const navigation = useNavigate();
+  
+    const goTo = to => navigation.navigate(to);
+  
+    return {goTo};
+  };
 
-    const redirect = useCallback(
-        () => navigate('/' + link),
-        [navigate,link]
-    );
-
-    useEffect(() => {
-        redirect()
-    }, [redirect])
-
-}
-
-export default Navegador
+export default useCustomNav

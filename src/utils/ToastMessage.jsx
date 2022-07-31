@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 
-const ToastMessage = ({ showed }) => {
-    const [show, setShow] = useState(false);
-    useEffect(() => { setShow(showed) }, [showed])
+const ToastMessage = ({ ocultar }) => {
+    const ocultarMensaje = () => {
+        ocultar()
+    }
     return (
-        <ToastContainer position="bottom-end" className="p-3">
-            <Toast onClose={() => setShow(false)} show={show}>
-                <Toast.Header>
-                    <strong className="me-auto">Plaza Vea</strong>
-                    <small>1 sec ago</small>
-                </Toast.Header>
-                <Toast.Body>Woohoo, has registrado exitosamente!</Toast.Body>
-            </Toast>
-        </ToastContainer>
+        <div className="bg-dark position-relative">
+            <ToastContainer position="bottom-end" className="p-3">
+                <Toast bg={"success"} onClose={ocultarMensaje} show={true} 
+                    delay={2000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Plaza Vea</strong>
+                        <small>1 sec ago</small>
+                    </Toast.Header>
+                    <Toast.Body>Woohoo, has registrado exitosamente!</Toast.Body>
+                </Toast>
+            </ToastContainer>
+        </div>
+
     )
 }
 

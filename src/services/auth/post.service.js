@@ -1,10 +1,10 @@
-import axios from "axios";
+import axiosConfig from "../../axiosConfig";
 import authHeader from "./auth-header";
 
-const URL = process.env.REACT_APP_API_URL;
+const instance = axiosConfig.instance
 
 const getAllPublicPosts = async () => {
-  return await axios.get(URL + '/producto');
+  return await instance.get('/producto');
 };
 
 const getAllPrivatePosts = async () => {
@@ -12,7 +12,7 @@ const getAllPrivatePosts = async () => {
     "email": "diegovic99@hotmail.com",
     "password":"diegovic"
   }
-  return await axios.post(URL + "/jwt/getuserdetails",data, { headers: authHeader() });
+  return await instance.post("/jwt/getuserdetails",data, { headers: authHeader() });
 };
 
 const postService = {

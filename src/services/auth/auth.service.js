@@ -1,10 +1,10 @@
-import axios from "axios";
+import axiosConfig from "../../axiosConfig";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const instance = axiosConfig.instance
 
 const signup = (email, password) => {
-  return axios
-    .post(API_URL + "/signup", {
+  return instance
+    .post("/signup", {
       email,
       password,
     })
@@ -18,16 +18,15 @@ const signup = (email, password) => {
 };
 
 const login = (email, password) => {
-
-
-  return axios
-    .post(API_URL + "/jwt/authenticate", {
+  return instance
+    .post("/jwt/authenticate", {
       email,
       password,
     })
     .then((response) => {
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        axiosConfig.setAuthToken()
       }
 
       return response.data;
@@ -36,6 +35,7 @@ const login = (email, password) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  axiosConfig.setAuthToken(undefined)
 };
 
 const getCurrentUser = () => {

@@ -40,7 +40,7 @@ const Login = () => {
             LoginServ()
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit }) => (
+          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit,isValid}) => (
 
             <Form className="mx-auto" onSubmit={handleSubmit}>
               <Form.Group controlId="formUser">
@@ -62,7 +62,7 @@ const Login = () => {
                   (<div className={style.error_message}>{errors.password}</div>) : null}
               </Form.Group>
               <Button style={{ margin: "15px" }}
-                color="success" type='submit' disabled={isSubmitting}>
+                color="success" type='submit' disabled={isSubmitting||!isValid}>
                 Login
               </Button>
             </Form>
@@ -76,7 +76,6 @@ const Login = () => {
             </Alert>
           )
           : null}
-
       </div>
     </>
 

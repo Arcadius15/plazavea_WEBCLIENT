@@ -1,20 +1,21 @@
-import axios from "axios";
+import axiosConfig from "../../axiosConfig";
 import authHeader from "../auth/auth-header";
 
-const URL = process.env.REACT_APP_API_URL+'/producto';
+const URL = '/producto';
+const instance = axiosConfig.instance
 
 const getProductos = async (pagina=1) => {
-    return await axios.get(URL +`?page=${pagina}`);
+    return await instance.get(URL +`?page=${pagina}`);
 };
 
 const postProducto = async(producto)=>{
     let body = JSON.stringify(producto)
-    return await axios.post(URL,body,authHeader())
+    return await instance.post(URL,body,authHeader())
 }
 
 const patchProducto = async(id,props)=>{
     let body = JSON.stringify(props)
-    return await axios.patch(URL,body,authHeader())
+    return await instance.patch(URL,body,authHeader())
 }
 
 const ProductoService = {
