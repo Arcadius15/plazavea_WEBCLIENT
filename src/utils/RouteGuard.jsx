@@ -32,7 +32,6 @@ const validarRoles=(roles,buscar="ROLE_MASTER")=>{
     let auth = false
     roles.forEach(e => {
         if (e.authority===buscar) {
-            console.log(e.authority)
             auth = true
         }
     });

@@ -4,16 +4,34 @@ import EmpleadoSchema from './EmpleadoValidacion'
 import Form from 'react-bootstrap/Form';
 import ToastMessage from '../../utils/ToastMessage';
 import { Button } from '@mui/material';
+import style from './Usuario.module.css'
+import UsuarioService from '../../services/service/Usuario.service';
+import ToastError from '../../utils/ToastError';
 
 
 const RegistrarEmpleado = () => {
   const [show, setShow] = useState(false)
+  const [showe,setShowe] = useState(false)
+  const [mensaje,setMensaje] = useState('')
+  const [tipo, setTipo] = useState('empleado')
 
-  const mostrarToast=()=>{
+  const cambiarTipo = (tipoUsuario) => {
+    setTipo(tipoUsuario)
+  }
+
+  const mostrarToast = () => {
     setShow(true)
   }
-  const ocultarToast=()=>{
+  const ocultarToast = () => {
     setShow(false)
+  }
+  const mostrarError = (erroMessage) => {
+    setMensaje(erroMessage)
+    setShowe(true)
+  }
+  const ocultarError = () => {
+    setMensaje('')
+    setShowe(false)
   }
   return (
     <>
@@ -21,75 +39,116 @@ const RegistrarEmpleado = () => {
         <h3>Registrar Empleado</h3>
         <Formik
           initialValues={{
-            email:'',password:'',
-            rol:'',empleado:{
-              nombres:'',apellidos:'',
-              dni:'',fechaNacimiento:new Date(),
-              numTelefonico:''
-            }
+            email: '', password: '',
+            roles: [], empleado: {
+              nombres: '', apellidos: '',
+              dni: '', fechaNacimiento: new Date().toISOString().split('T')[0],
+              numTelefonico: ''
+            },
           }}
+          enableReinitialize={true}
           validationSchema={EmpleadoSchema}
-          onSubmit={(values,{setSubmitting,resetForm})=>{
-            setSubmitting(true)
-            alert(JSON.stringify(values))
-            mostrarToast()
-            setSubmitting(false)
-            resetForm()
+          onSubmit={(values, actions) => {
+            actions.setSubmitting(true)
+            values.roles = Array.of(tipo)
+            const registrar = async () => {
+              console.log(values)
+              await UsuarioService.postEmpleado(values)
+                .then((res)=>{
+                  if (res.status===200) {
+                    mostrarToast()
+                  }
+                },(err)=>{
+                  let msg = err.response.data.mensaje
+                  msg?mostrarError(msg):mostrarError('Ha ocurrido un Problema.')
+                })
+            }
+            registrar()
+            actions.setSubmitting(false)
+            actions.resetForm()
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit })=>(
+          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit }) => (
             <Form className='mx-auto' onSubmit={handleSubmit}>
-              {/*Correo*/} 
+              {/*Correo*/}
               <Form.Group>
                 <Form.Label>Correo:</Form.Label>
                 <Form.Control name='email' type='text' placeholder='Ingrese Correo'
-                   onChange={handleChange} onBlur={handleBlur} value={values.email}
-                   className={touched.email && errors.email ? "error" : null}>
+                  onChange={handleChange} onBlur={handleBlur} value={values.email}
+                  className={touched.email && errors.email ? "error" : null}>
                 </Form.Control>
+                {touched.email && errors.email ?
+                  (<div className={style.error_message}>{errors.email}</div>) : null}
               </Form.Group>
-              {/*password*/} 
+              {/*password*/}
               <Form.Group>
                 <Form.Label>Password:</Form.Label>
-                <Form.Control name='password' type='text' placeholder='Ingrese Password'
-                   onChange={handleChange} onBlur={handleBlur} value={values.password}
-                   className={touched.password && errors.password ? "error" : null}>
+                <Form.Control name='password' type='password' placeholder='Ingrese Password'
+                  onChange={handleChange} onBlur={handleBlur} value={values.password}
+                  className={touched.password && errors.password ? "error" : null}>
                 </Form.Control>
+                {touched.password && errors.password ?
+                  (<div className={style.error_message}>{errors.password}</div>) : null}
               </Form.Group>
-              {/*nombres*/} 
+              {/*nombres*/}
               <Form.Group>
                 <Form.Label>Nombres:</Form.Label>
-                <Form.Control name='empledo.nombres' type='text' placeholder='Ingrese Nombres'
-                   onChange={handleChange} onBlur={handleBlur} value={values.empledo.nombres}
-                   className={touched.empledo.nombres && errors.empledo.nombres ? "error" : null}>
+                <Form.Control name='empleado.nombres' type='text' placeholder='Ingrese Nombres'
+                  value={values.empleado.nombres} onChange={handleChange} onBlur={handleBlur}
+                  className={errors.empleado && touched.empleado ? "error" : null}>
                 </Form.Control>
+                {touched.empleado && errors.empleado ?
+                  (<div className={style.error_message}>{errors.empleado.nombres}</div>) : null}
               </Form.Group>
-              {/*apellidos*/} 
               <Form.Group>
                 <Form.Label>Apellidos:</Form.Label>
                 <Form.Control name='empleado.apellidos' type='text' placeholder='Ingrese Apellidos'
-                   onChange={handleChange} onBlur={handleBlur} value={values.empleado.apellidos}
-                   className={touched.empleado.apellidos && errors.empleado.apellidos ? "error" : null}>
+                  onChange={handleChange} onBlur={handleBlur} value={values.empleado.apellidos}
+                  className={errors.empleado && touched.empleado ? "error" : null}>
                 </Form.Control>
+                {touched.empleado && errors.empleado ?
+                  (<div className={style.error_message}>{errors.empleado.apellidos}</div>) : null}
               </Form.Group>
-              {/*dni*/} 
+              {/*dni*/}
               <Form.Group>
                 <Form.Label>DNI:</Form.Label>
                 <Form.Control name='empleado.dni' type='text' placeholder='Ingrese DNI'
-                   onChange={handleChange} onBlur={handleBlur} value={values.empleado.dni}
-                   className={touched.empleado.dni && errors.empleado.dni ? "error" : null}>
+                  onChange={handleChange} onBlur={handleBlur} value={values.empleado.dni}
+                  className={errors.empleado && touched.empleado ? "error" : null}>
                 </Form.Control>
+                {touched.empleado && errors.empleado ?
+                  (<div className={style.error_message}>{errors.empleado.dni}</div>) : null}
               </Form.Group>
-              {/*numTelefonico*/} 
+              {/*numTelefonico*/}
               <Form.Group>
-                <Form.Label>Correo:</Form.Label>
-                <Form.Control name='empleado.numTelefonico' type='text' 
+                <Form.Label>Fecha de Naciemiento:</Form.Label>
+                <Form.Control name='empleado.fechaNacimiento' type='date'
                   placeholder='Ingrese Numero Telefonico'
-                  onChange={handleChange} onBlur={handleBlur} 
-                  value={values.empleado.numTelefonico}
-                  className={touched.empleado.numTelefonico && 
-                    errors.empleado.numTelefonico 
-                    ? "error" : null}>
+                  onChange={handleChange} onBlur={handleBlur}
+                  value={values.empleado.fechaNacimiento}
+                  className={errors.empleado && touched.empleado ? "error" : null}>
                 </Form.Control>
+                {touched.empleado && errors.empleado ?
+                  (<div className={style.error_message}>{errors.empleado.fechaNacimiento}</div>) : null}
+              </Form.Group>
+              {/*numTelefonico*/}
+              <Form.Group>
+                <Form.Label>Numero Telefonico:</Form.Label>
+                <Form.Control name='empleado.numTelefonico' type='text'
+                  placeholder='Ingrese Numero Telefonico'
+                  onChange={handleChange} onBlur={handleBlur}
+                  value={values.empleado.numTelefonico}
+                  className={errors.empleado && touched.empleado ? "error" : null}>
+                </Form.Control>
+                {touched.empleado && errors.empleado ?
+                  (<div className={style.error_message}>{errors.empleado.numTelefonico}</div>) : null}
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Rol:</Form.Label>
+                <Form.Select onChange={(e)=>cambiarTipo(e.currentTarget.value)}>
+                  <option value="empleado">Empleado</option>
+                  <option value="admin">Administrador</option>
+                </Form.Select>
               </Form.Group>
               <Button style={{ margin: "15px" }}
                 color="success" type='submit' disabled={isSubmitting}>
@@ -99,7 +158,8 @@ const RegistrarEmpleado = () => {
           )}
         </Formik>
       </div>
-      {show?<ToastMessage ocultar={ocultarToast}/>:null}
+      {show ? <ToastMessage ocultar={ocultarToast} /> : null}
+      {showe ? <ToastError ocultar={ocultarError} mensaje={mensaje} /> : null}
     </>
   )
 }

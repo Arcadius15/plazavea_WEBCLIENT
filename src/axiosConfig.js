@@ -12,12 +12,10 @@ const setAuthToken =() => {
     const user = JSON.parse(localStorage.getItem("user"))
     if (user) {
         instance.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
-        console.log(instance.defaults)
     }
     else
     {
         delete instance.defaults.headers.common["Authorization"];
-        delete instance.defaults.headers.common["Content-Type"];
     } 
 }
 

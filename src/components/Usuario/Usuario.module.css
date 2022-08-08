@@ -1,0 +1,7 @@
+.error_message {
+    color: #FF6565;
+    padding: .1em .5em;
+    height: 1.5em;
+    position: initial;
+    font-size: .7em;
+  }

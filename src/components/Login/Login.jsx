@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth/auth.service";
 import LoginSchema from "./LoginValidacion";
 import style from "./Login.module.css"
-import { Alert, Button } from "@mui/material";
+import { Alert, Button, Link } from "@mui/material";
 
 const Login = () => {
-  const navigate = useNavigate();
+  let navigate = useNavigate();
 
   const [show, setShow] = useState(false)
 
@@ -35,12 +35,12 @@ const Login = () => {
                   console.log(error);
                 }
               );
-              setSubmitting(false); resetForm(); 
+              setSubmitting(false); resetForm();
             }
             LoginServ()
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit,isValid}) => (
+          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit, isValid }) => (
 
             <Form className="mx-auto" onSubmit={handleSubmit}>
               <Form.Group controlId="formUser">
@@ -61,18 +61,23 @@ const Login = () => {
                 {touched.password && errors.password ?
                   (<div className={style.error_message}>{errors.password}</div>) : null}
               </Form.Group>
-              <Button style={{ margin: "15px" }}
-                color="success" type='submit' disabled={isSubmitting||!isValid}>
-                Login
-              </Button>
+              <Form.Group style={{display: "flex",alignItems:"center",justifyContent:"center"}}>
+                <Button style={{ margin: "15px" }}
+                  color="success" type='submit' disabled={isSubmitting || !isValid}>
+                  Login
+                </Button>
+              </Form.Group>
+              <Form.Group style={{display: "flex",alignItems:"center",justifyContent:"center"}}>
+                <Link href="/changepassword">Change Password</Link>
+              </Form.Group>
             </Form>
           )}
         </Formik>
         {show ?
           (
             <Alert variant="outlined" severity="error"
-             onClick={()=>setShow(false)}>
-              Error en Email o Password — check it out!
+              onClick={() => setShow(false)}>
+              Error en Email o Password — Reviselo!
             </Alert>
           )
           : null}
