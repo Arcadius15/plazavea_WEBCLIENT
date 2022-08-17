@@ -1,5 +1,3 @@
-import axios from "axios";
-import authHeader from "../auth/auth-header";
 import axiosConfig from "../../axiosConfig";
 
 const URL = '/tienda';
@@ -15,14 +13,13 @@ const getTienda = (id) => {
 };
 
 const postTienda = (tienda)=>{
-    tienda.empleado = {idEmpleado:"USR_00004"}
     let body = JSON.stringify(tienda)
     return instance.post(URL,body)
 }
 
 const patchTienda =(id,props)=>{
     let body = JSON.stringify(props)
-    return axios.patch(URL+`/${id}`,body,authHeader())
+    return instance.patch(URL+`/${id}`,body)
 }
 
 const TiendaService={

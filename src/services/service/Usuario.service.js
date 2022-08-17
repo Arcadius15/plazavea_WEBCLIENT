@@ -8,8 +8,13 @@ const postEmpleado = (empleado) => {
     return instance.post(URL+"/registro/empleado",body)
 }
 
+const getAllUsers = () => {
+    return instance.get(URL+'/allusers')
+}
+
 const UsuarioService = {
-    postEmpleado
+    postEmpleado,
+    getAllUsers
 }
 
 export default UsuarioService

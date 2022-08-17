@@ -77,12 +77,20 @@ const NavbarUser = () => {
                                 </Nav.Link>}
                             {currentUser && verifyRol(admins) ? (
                                 <NavDropdown title="Empleados" id="navbarScrollingDropdown">
-                                    <NavDropdown.Item href={"/#"}>Listar Empleados</NavDropdown.Item>
+                                    <NavDropdown.Item href={"/usuario/listar"}>Listar Empleados</NavDropdown.Item>
                                     <NavDropdown.Item href={"/empleado/registrar"}>
                                         Registrar Empleado
                                     </NavDropdown.Item>
                                     <NavDropdown.Item href={"/repartidor/registrar"}>
                                         Registrar Repartidor
+                                    </NavDropdown.Item>
+                                </NavDropdown>
+                            ) : null}
+                            {currentUser && verifyRol(admins) ? (
+                                <NavDropdown title="Productos" id="navbarScrollingDropdown">
+                                    <NavDropdown.Item href={"/producto/listar"}>Listar Productos</NavDropdown.Item>
+                                    <NavDropdown.Item href={"/producto/registrar"}>
+                                        Registrar Producto
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             ) : null}

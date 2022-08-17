@@ -7,14 +7,31 @@ import ToastMessage from '../../utils/ToastMessage';
 import Form from 'react-bootstrap/Form';
 import style from "./RegistrarTienda.module.css"
 import { Button } from 'react-bootstrap';
+import { useEffect } from 'react';
+import EmpleadoService from '../../services/service/Empleado.service';
 
 const RegistrarTienda = () => {
   const [show, setShow] = useState(false)
 
-  const mostrarToast=()=>{
+  const [admins, setAdmins] = useState([])
+
+  useEffect(() => {
+    const getAdmins = async () => {
+      await EmpleadoService.getAdmins()
+        .then(res => {
+          setAdmins(res.data)
+        }, err => {
+          alert("ha ocurrido un error")
+          console.log(err)
+        })
+    }
+    getAdmins()
+  }, [])
+
+  const mostrarToast = () => {
     setShow(true)
   }
-  const ocultarToast=()=>{
+  const ocultarToast = () => {
     setShow(false)
   }
   return (
@@ -26,7 +43,8 @@ const RegistrarTienda = () => {
             {
               nombre: '', direccion: '',
               lat: 0, lng: 0, numeroTelefonico: '',
-              horarioA: '00:00', horarioC: '00:00'
+              horarioA: '00:00', horarioC: '00:00',
+              gerente: ''
             }
           }
           validationSchema={TiendaValidacion}
@@ -43,7 +61,7 @@ const RegistrarTienda = () => {
                 }
               }, error => {
                 console.log(error)
-                
+
               })
               setSubmitting(false);
               resetForm();
@@ -52,7 +70,7 @@ const RegistrarTienda = () => {
           }}
         >
           {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit }) => (
-            <Form className='mx-auto' onSubmit={handleSubmit}>
+            <Form className='mx-auto' style={{maxHeight:"80vh",overflow:"auto"}} onSubmit={handleSubmit}>
               <Form.Group controlId='formNombre'>
                 <Form.Label>Nombre: </Form.Label>
                 <Form.Control type='text' name='nombre' placeholder='Ingrese Nombre'
@@ -92,10 +110,19 @@ const RegistrarTienda = () => {
                   value={values.horarioC}>
                 </Form.Control>
               </Form.Group>
+              {/*Gerente */}
+              <Form.Group>
+                <Form.Label>Gerente:</Form.Label>
+                <Form.Select name='gerente' onChange={handleChange}>
+                  {admins.map(admin =>
+                    <option key={admin.idEmpleado} value={admin.idEmpleado}>
+                      {admin.nombres + " " + admin.apellidos}</option>)}
+                </Form.Select>
+              </Form.Group>
               <Form.Group controlId='formMapa'>
                 <Form.Label>Mapa:</Form.Label>
                 <MapForm />
-                {values.lat===0||values.lng===0 ?
+                {values.lat === 0 || values.lng === 0 ?
                   (<div className={style.error_message}>{"Ingrese Coordenada"}</div>) : null}
               </Form.Group>
 
@@ -107,12 +134,12 @@ const RegistrarTienda = () => {
           )}
         </Formik>
         {/* <Button color="success" onClick={mostrarToast}>Muestra toast</Button> */}
-        
+
         {/* <ToastMessage showed={show} /> */}
 
 
       </div>
-      {show?<ToastMessage ocultar={ocultarToast}/>:null}
+      {show ? <ToastMessage ocultar={ocultarToast} /> : null}
     </>
   )
 }

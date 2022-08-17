@@ -14,7 +14,6 @@ const Login = () => {
 
   return (
     <>
-      <div className='container-fluid' style={{ margin: '10px' }}>
         <h1 style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10px' }}>Login</h1>
         <Formik
           initialValues={{
@@ -42,7 +41,7 @@ const Login = () => {
         >
           {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit, isValid }) => (
 
-            <Form className="mx-auto" onSubmit={handleSubmit}>
+            <Form className="mx-auto" style={{maxWidth:"500px"}} onSubmit={handleSubmit}>
               <Form.Group controlId="formUser">
                 <Form.Label>Correo:</Form.Label>
                 <Form.Control type="text" name="email" placeholder="Ingrese Correo"
@@ -62,7 +61,7 @@ const Login = () => {
                   (<div className={style.error_message}>{errors.password}</div>) : null}
               </Form.Group>
               <Form.Group style={{display: "flex",alignItems:"center",justifyContent:"center"}}>
-                <Button style={{ margin: "15px" }}
+                <Button style={{ margin: "15px 15px 5px 15px" }} variant={"outlined"}
                   color="success" type='submit' disabled={isSubmitting || !isValid}>
                   Login
                 </Button>
@@ -75,13 +74,12 @@ const Login = () => {
         </Formik>
         {show ?
           (
-            <Alert variant="outlined" severity="error"
-              onClick={() => setShow(false)}>
+            <Alert variant="outlined" severity="error" className="mx-auto"
+              onClick={() => setShow(false)} style={{maxWidth:"500px",display:"flex",justifyContent:"center",alignItems:"center",marginTop:"15px"}}>
               Error en Email o Password — Reviselo!
             </Alert>
           )
           : null}
-      </div>
     </>
 
   );

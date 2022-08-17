@@ -4,13 +4,17 @@ import authHeader from "../auth/auth-header";
 const URL = '/producto';
 const instance = axiosConfig.instance
 
-const getProductos = async (pagina=1) => {
-    return await instance.get(URL +`?page=${pagina}`);
+const getProductos = (pagina=1) => {
+    return instance.get(URL +`?page=${pagina}`);
 };
 
 const postProducto = async(producto)=>{
     let body = JSON.stringify(producto)
     return await instance.post(URL,body,authHeader())
+}
+
+const getProductosBySubcat=(id,unpaged=false)=>{
+    return instance.get(URL+`/subcategoria/${id}?unpaged=${unpaged}`)
 }
 
 const patchProducto = async(id,props)=>{
@@ -21,7 +25,8 @@ const patchProducto = async(id,props)=>{
 const ProductoService = {
     getProductos,
     postProducto,
-    patchProducto
+    patchProducto,
+    getProductosBySubcat
 }
 
 export default ProductoService

@@ -7,6 +7,8 @@ import { Button } from '@mui/material';
 import style from './Usuario.module.css'
 import UsuarioService from '../../services/service/Usuario.service';
 import ToastError from '../../utils/ToastError';
+import { useEffect } from 'react';
+import TiendaService from '../../services/service/Tienda.service';
 
 
 const RegistrarEmpleado = () => {
@@ -14,6 +16,17 @@ const RegistrarEmpleado = () => {
   const [showe,setShowe] = useState(false)
   const [mensaje,setMensaje] = useState('')
   const [tipo, setTipo] = useState('empleado')
+  const [tiendas,setTiendas] = useState([])
+
+  useEffect(()=>{
+    const getTiendas= async ()=>{
+      await TiendaService.getTiendas()
+        .then(res=>{
+          setTiendas(res.data)
+        })
+    }
+    getTiendas()
+  },[])
 
   const cambiarTipo = (tipoUsuario) => {
     setTipo(tipoUsuario)
@@ -43,7 +56,10 @@ const RegistrarEmpleado = () => {
             roles: [], empleado: {
               nombres: '', apellidos: '',
               dni: '', fechaNacimiento: new Date().toISOString().split('T')[0],
-              numTelefonico: ''
+              numTelefonico: '',
+              tienda:{
+                idTienda:''
+              }
             },
           }}
           enableReinitialize={true}
@@ -148,6 +164,15 @@ const RegistrarEmpleado = () => {
                 <Form.Select onChange={(e)=>cambiarTipo(e.currentTarget.value)}>
                   <option value="empleado">Empleado</option>
                   <option value="admin">Administrador</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Tienda:</Form.Label>
+                <Form.Select name='empleado.tienda.idTienda' onChange={handleChange}>
+                  {tiendas.map(tienda=>
+                    <option key={tienda.idTienda} value={tienda.idTienda}>
+                      {tienda.nombre}
+                    </option>)}
                 </Form.Select>
               </Form.Group>
               <Button style={{ margin: "15px" }}

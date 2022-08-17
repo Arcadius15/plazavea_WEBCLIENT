@@ -23,6 +23,9 @@ const RepartidorSchema = Yup.object().shape({
             .trim()
             .matches(placaRegex,'Numero de Placa invalido')
             .required(),
+        tienda:Yup.object().shape({
+            idTienda:Yup.string().required()
+        })
     })
 })
 

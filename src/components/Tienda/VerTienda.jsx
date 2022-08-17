@@ -7,7 +7,6 @@ import { CardActionArea, IconButton, Link } from '@mui/material';
 import { GoogleMap,useJsApiLoader, Marker  } from '@react-google-maps/api';
 import TiendaService from '../../services/service/Tienda.service';
 import { useNavigate, useParams } from 'react-router-dom';
-import Navegador from '../../utils/Navegador';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const containerStyle = {
@@ -27,6 +26,8 @@ const VerTienda = () => {
   })
   const [isMounted, setIsMounted] = useState(false);
   const [map, setMap] = useState(null)
+  
+  let navigate = useNavigate()
 
   useEffect(() => {
     const get = async () => {
@@ -36,13 +37,14 @@ const VerTienda = () => {
           setCoords({lat:response.data.lat,lng:response.data.lng})
           setIsMounted(true)
         },
-        error => {
-          Navegador("home")
+        (err) => {
+          console.log(err)
+          //navigate("/home")
         }
       )
     }
     get()
-  }, [id])
+  }, [id,navigate])
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(coords);
     map.fitBounds(bounds);
@@ -56,7 +58,6 @@ const VerTienda = () => {
     setMap(null)
   }, [])
 
-  let navigate = useNavigate()
   const regresar=()=>{
     navigate("/tiendas")
   }

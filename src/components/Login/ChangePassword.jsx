@@ -19,31 +19,32 @@ const ChangePassword = () => {
                         email: '',
                         oldPassword: '',
                         newPassword: '',
-                        confirmPassword:''
+                        confirmPassword: ''
                     }}
+                    validateOnMount
                     validationSchema={changePasswordSchema}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
                         setSubmitting(true)
                         const LoginServ = async () => {
-                            AuthService.changePassword(values).then((res)=>{
-                                if (res.status===200) {
+                            AuthService.changePassword(values).then((res) => {
+                                if (res.status === 200) {
                                     alert("Contraseña cambiada")
                                     setSubmitting(false); resetForm();
                                     navigate('/login')
                                 }
-                            },(err)=>{
+                            }, (err) => {
                                 console.log(err.response.data)
                                 setShow(true)
                                 setSubmitting(false)
                             })
                         }
                         LoginServ()
-                        
+
                     }}
                 >
                     {({ values, errors, touched, handleChange, handleBlur, isSubmitting, handleSubmit, isValid }) => (
 
-                        <Form className="mx-auto" onSubmit={handleSubmit}>
+                        <Form className="mx-auto shadow-lg" onSubmit={handleSubmit} style={{padding:"18px"}}>
                             <Form.Group controlId="formUser">
                                 <Form.Label>Email:</Form.Label>
                                 <Form.Control type="text" name="email" placeholder="Ingrese Correo"
@@ -80,10 +81,13 @@ const ChangePassword = () => {
                                 {touched.confirmPassword && errors.confirmPassword ?
                                     (<div className={style.error_message}>{errors.confirmPassword}</div>) : null}
                             </Form.Group>
-                            <Button style={{ margin: "15px" }}
-                                color="success" type='submit' disabled={isSubmitting || !isValid}>
-                                Login
-                            </Button>
+                            <Form.Group style={{display: 'flex', alignItems: "center",justifyContent:"center"}}>
+                                <Button style={{ marginTop: "18px",padding:"5px 20px 5px 20px" }} variant={"outlined"}
+                                    color="secondary" type='submit' disabled={isSubmitting || !isValid}>
+                                    Cambiar
+                                </Button>
+                            </Form.Group>
+
                         </Form>
                     )}
                 </Formik>

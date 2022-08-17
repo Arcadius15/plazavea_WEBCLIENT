@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Form from 'react-bootstrap/Form';
 import ToastMessage from '../../utils/ToastMessage';
 import { Button } from '@mui/material';
@@ -7,12 +7,24 @@ import style from './Usuario.module.css'
 import UsuarioService from '../../services/service/Usuario.service';
 import ToastError from '../../utils/ToastError';
 import RepartidorSchema from './RepartidorValidacion';
+import TiendaService from '../../services/service/Tienda.service';
 
 
 const RegistrarRepartidor = () => {
     const [show, setShow] = useState(false)
     const [showe, setShowe] = useState(false)
     const [mensaje, setMensaje] = useState('')
+    const [tiendas, setTiendas] = useState([])
+
+    useEffect(() => {
+        const getTiendas = async () => {
+            await TiendaService.getTiendas()
+                .then(res => {
+                    setTiendas(res.data)
+                })
+        }
+        getTiendas()
+    }, [])
 
     const mostrarToast = () => {
         setShow(true)
@@ -40,7 +52,9 @@ const RegistrarRepartidor = () => {
                             dni: '', fechaNacimiento: new Date().toISOString().split('T')[0],
                             numTelefonico: '',
                             turno: 0,
-                            placa: '', direccion: '',status:'FUERA_DE_SERVICIO'
+                            placa: '', direccion: '', status: 'FUERA_DE_SERVICIO', tienda: {
+                                idTienda: ''
+                            }
                         },
                     }}
                     enableReinitialize={true}
@@ -49,17 +63,17 @@ const RegistrarRepartidor = () => {
                         actions.setSubmitting(true)
                         values.roles = Array.of('repartidor')
                         const registrar = async () => {
-                          console.log(values)
-                          await UsuarioService.postEmpleado(values)
-                            .then((res)=>{
-                              if (res.status===200) {
-                                mostrarToast()
-                              }
-                            },(err)=>{
-                              let msg = err.response.data.mensaje
-                              console.log(err)
-                              msg?mostrarError(msg):mostrarError('Ha ocurrido un Problema.')
-                            })
+                            console.log(values)
+                            await UsuarioService.postEmpleado(values)
+                                .then((res) => {
+                                    if (res.status === 200) {
+                                        mostrarToast()
+                                    }
+                                }, (err) => {
+                                    let msg = err.response.data.mensaje
+                                    console.log(err)
+                                    msg ? mostrarError(msg) : mostrarError('Ha ocurrido un Problema.')
+                                })
                         }
                         registrar()
                         actions.setSubmitting(false)
@@ -173,6 +187,15 @@ const RegistrarRepartidor = () => {
                                     <option value={1}>Tarde</option>
                                     <option value={2}>Noche</option>
                                 </Form.Control>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Tienda:</Form.Label>
+                                <Form.Select name='repartidor.tienda.idTienda' onChange={handleChange}>
+                                    {tiendas.map(tienda =>
+                                        <option key={tienda.idTienda} value={tienda.idTienda}>
+                                            {tienda.nombre}
+                                        </option>)}
+                                </Form.Select>
                             </Form.Group>
                             <Button style={{ margin: "15px" }}
                                 color="success" type='submit' disabled={isSubmitting}>

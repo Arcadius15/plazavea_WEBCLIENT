@@ -56,7 +56,7 @@ const Home = () => {
   return (
     <>
         <h3 align={"center"}>Listado de Productos</h3>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} style={{maxWidth:"100vw",maxHeight:"85vh"}}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
