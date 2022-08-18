@@ -113,7 +113,8 @@ const RegistrarTienda = () => {
               {/*Gerente */}
               <Form.Group>
                 <Form.Label>Gerente:</Form.Label>
-                <Form.Select name='gerente' onChange={handleChange}>
+                <Form.Select name='gerente' onChange={handleChange} defaultValue={''}>
+                  <option value={''}>Seleccione Gerente</option>
                   {admins.map(admin =>
                     <option key={admin.idEmpleado} value={admin.idEmpleado}>
                       {admin.nombres + " " + admin.apellidos}</option>)}

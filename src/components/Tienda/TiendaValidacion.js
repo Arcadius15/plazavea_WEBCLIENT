@@ -16,7 +16,8 @@ const TiendaSchema = Yup.object().shape({
       .matches(telefonoRegex,'Numero telefonico Incorrecto')
       .required(),
     lat:Yup.number().notOneOf([0]).required(),
-    lng:Yup.number().notOneOf([0]).required()
+    lng:Yup.number().notOneOf([0]).required(),
+    gerente:Yup.string().required()
   });
 
 
